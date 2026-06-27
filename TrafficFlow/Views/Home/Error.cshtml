@@ -1,0 +1,13 @@
+﻿@model TrafficFlow.Modelos.ErrorViewModel
+
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1>Error</h1>
+<h2>Ocurrió un error inesperado.</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p>ID de solicitud: <strong>@Model.RequestId</strong></p>
+}

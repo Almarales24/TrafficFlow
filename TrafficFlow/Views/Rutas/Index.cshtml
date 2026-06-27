@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "TrafficFlow - Mapa de Tránsito";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+
+    <!-- Estilos -->
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <style>
+            html, body { height: 100%; overflow: hidden; }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header class="encabezado">
+        <h1>🚦 TrafficFlow</h1>
+        <div class="indicador-conexion">
+            <span></span> En tiempo real
+        </div>
+    </header>
+
+    <!-- Contenido principal -->
+    <div class="contenedor-principal">
+
+        <!-- Mapa -->
+        <div id="mapa"></div>
+
+        <!-- Panel lateral -->
+        <aside class="panel-lateral">
+            <h2>Rutas Activas</h2>
+            <div id="listaRutas">
+                <p style="color:#555; font-size:0.85rem;">Cargando rutas...</p>
+            </div>
+
+            <!-- Leyenda -->
+            <div class="leyenda">
+                <p style="color:#8b949e; font-size:0.8rem; margin-bottom:4px;">Niveles de tránsito</p>
+                <div class="leyenda-item">
+                    <div class="leyenda-color" style="background:#39d353;"></div>
+                    <span>Bajo — Fluido</span>
+                </div>
+                <div class="leyenda-item">
+                    <div class="leyenda-color" style="background:#f0c030;"></div>
+                    <span>Medio — Moderado</span>
+                </div>
+                <div class="leyenda-item">
+                    <div class="leyenda-color" style="background:#f85149;"></div>
+                    <span>Alto — Congestionado</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/mapaTransito.js"></script>
+
+</body>
+</html>

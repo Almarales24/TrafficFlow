@@ -1,0 +1,103 @@
+# Visual Studio
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+mono_crash.*
+.vs/
+Generated\ Files/
+*.VisualState.xml
+TestResult.xml
+nunit-*.xml
+*.dotCover
+*.coverage
+*.coveragexml
+*.binlog
+*.nvuser
+.mfractor/
+.localhistory/
+healthchecksdb
+MigrationBackup/
+.ionide/
+FodyWeavers.xsd
+
+# Build
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+[Tt]est[Rr]esult*/
+[Bb]uild[Ll]og.*
+[Dd]ebugPS/
+[Rr]eleasePS/
+dlldata.c
+BenchmarkDotNet.Artifacts/
+artifacts/
+
+# NuGet
+*.nupkg
+*.snupkg
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nuget.props
+*.nuget.targets
+
+# Credenciales y configuración sensible
+appsettings.json
+appsettings.*.json
+secrets.json
+.env
+.env.*
+*.env
+Properties/launchSettings.json
+TrafficFlow/appsettings.json
+TrafficFlow/appsettings.*.json
+TrafficFlow/Properties/launchSettings.json
+
+# Certificados y claves
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+
+# Base de datos local
+*.sqlite
+*.db
+*.mdb
+*.mdf
+*.ldf
+*.ndf
+
+# Logs y backups
+logs/
+*.log
+*.bak
+*.backup
+
+# Otros
+project.lock.json
+project.fragment.lock.json
+ScaffoldingReadMe.txt
+node_modules/
+__pycache__/
+*.pyc
+publish/
+*.pubxml
+*.publishproj
+PublishScripts/
+ClientBin/
+orleans.codegen.cs
