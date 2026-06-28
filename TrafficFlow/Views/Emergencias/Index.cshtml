@@ -1,0 +1,136 @@
+﻿@model List<TrafficFlow.Modelos.Emergencia>
+
+@{
+    ViewData["Title"] = "Simulador de Emergencias";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+    <style>
+            .tarjeta-emergencia {
+                background: linear-gradient(135deg, #1a0a0a, #2d0f0f);
+                border: 1px solid var(--color-rojo);
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 12px;
+                animation: alertaEmergencia 1.5s infinite;
+            }
+
+            @@keyframes alertaEmergencia {
+                0%, 100% { box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4); }
+                50% { box-shadow: 0 0 12px 4px rgba(248, 81, 73, 0.2); }
+            }
+
+            .btn-simular {
+                background: var(--color-rojo);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;
+                width: 100%;
+                transition: all 0.3s ease;
+                margin-top: 8px;
+            }
+
+            .btn-simular:hover {
+                background: #ff6b6b;
+                transform: scale(1.02);
+            }
+
+            .btn-finalizar {
+                background: transparent;
+                color: var(--color-verde);
+                border: 1px solid var(--color-verde);
+                padding: 4px 12px;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-top: 8px;
+                transition: all 0.3s ease;
+            }
+
+            .btn-finalizar:hover {
+                background: var(--color-verde);
+                color: black;
+            }
+
+            select, input {
+                background: var(--color-fondo);
+                color: var(--color-texto);
+                border: 1px solid var(--color-borde);
+                padding: 8px;
+                border-radius: 6px;
+                width: 100%;
+            }
+    </style>
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>🚨 Simulador de Emergencias</h1>
+        <a href="/Rutas" style="color:var(--color-azul);">← Volver al mapa</a>
+    </header>
+
+    <div style="display:flex; flex:1; overflow:hidden;">
+
+        <!-- Emergencias activas -->
+        <div class="panel-lateral" style="width:100%; max-width:500px;">
+            <h2>Emergencias Activas</h2>
+            <div id="listaEmergencias">
+                @if (Model.Count == 0)
+                {
+                    <p style="color:#555;">No hay emergencias activas.</p>
+                }
+                @foreach (var emergencia in Model)
+                {
+                    <div class="tarjeta-emergencia" id="emergencia-@emergencia.Id">
+                        <h3 style="color:var(--color-rojo);">@emergencia.Tipo.ToUpper()</h3>
+                        <p>@emergencia.Descripcion</p>
+                        <p style="color:#8b949e;">Impacto: <strong class="nivel-alto">@emergencia.NivelImpacto</strong></p>
+                        <p style="color:#8b949e;">Rutas afectadas: @emergencia.RutasAfectadas.Count</p>
+                        <p style="font-size:0.75rem; color:#555;">
+                            @emergencia.CreadoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                        </p>
+                        <button class="btn-finalizar" onclick="finalizar('@emergencia.Id')">
+                            ✓ Finalizar emergencia
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Formulario simulación -->
+        <div class="panel-lateral" style="width:100%; max-width:400px;">
+            <h2>Simular Emergencia</h2>
+            <form action="/Emergencias/Simular" method="post" style="display:flex; flex-direction:column; gap:10px;">
+                <select name="Tipo">
+                    <option value="terremoto">🌍 Terremoto</option>
+                    <option value="cierresMasivos">🚧 Cierres Masivos</option>
+                    <option value="inundacion">🌊 Inundación</option>
+                    <option value="accidenteMasivo">💥 Accidente Masivo</option>
+                </select>
+                <input name="Descripcion" placeholder="Descripción de la emergencia" />
+                <select name="NivelImpacto">
+                    <option value="alto">Alto</option>
+                    <option value="medio">Medio</option>
+                    <option value="bajo">Bajo</option>
+                </select>
+                <button type="submit" class="btn-simular">
+                    ⚡ Activar Simulación
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/simuladorEmergencias.js"></script>
+
+</body>
+</html>

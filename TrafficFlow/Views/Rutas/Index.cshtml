@@ -11,81 +11,146 @@
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
     <style>
-        html, body { height: 100%; overflow: hidden; }
-        @@keyframes pulso {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+            html, body {
+                height: 100%;
+                margin: 0;
+                overflow: hidden;
             }
-            50% {
-                box-shadow: 0 0 0 8px rgba(248, 81, 73, 0);
+
+            .contenedor-app {
+                display: flex;
+                flex-direction: column;
+                height: 100vh;
             }
-        }
+
+            .encabezado {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 10px 24px;
+                background-color: #161b22;
+                border-bottom: 1px solid #30363d;
+                height: 55px;
+                z-index: 1000;
+            }
+
+                .encabezado h1 {
+                    color: #58a6ff;
+                    font-size: 1.3rem;
+                    margin: 0;
+                }
+
+            .nav-botones {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .contenedor-principal {
+                display: flex;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            #mapa {
+                flex: 1;
+                height: 100%;
+            }
+
+            @@keyframes pulso {
+                0%, 100% {
+                    box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+                }
+
+                50% {
+                    box-shadow: 0 0 0 8px rgba(248, 81, 73, 0);
+                }
+            }
+
+            @@keyframes pulsoAmarillo {
+                0%, 100% {
+                    box-shadow: 0 0 0 0 rgba(240, 192, 48, 0.4);
+                }
+
+                50% {
+                    box-shadow: 0 0 0 8px rgba(240, 192, 48, 0);
+                }
+            }
     </style>
 </head>
 <body>
-    <header class="encabezado">
-        <h1>🚦 TrafficFlow</h1>
-        <button onclick="window.location.href='/Incidentes'" style="
-            background: transparent;
-            border: 1px solid var(--color-rojo);
-            color: var(--color-rojo);
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.3s ease;
-            animation: pulso 2s infinite;
-            " onmouseover="this.style.background='var(--color-rojo)'; this.style.color='white';"
-                onmouseout="this.style.background='transparent'; this.style.color='var(--color-rojo)';">
-            🚨 Incidentes
-        </button>
-        <div class="indicador-conexion">
-            <span></span> En tiempo real
-        </div>
-    </header>
+    <div class="contenedor-app">
 
-
-        </div>
-    </header>
-
-    <!-- Contenido principal -->
-    <div class="contenedor-principal">
-
-        <!-- Mapa -->
-        <div id="mapa"></div>
-
-        <!-- Panel lateral -->
-        <aside class="panel-lateral">
-            <h2>Rutas Activas</h2>
-            <div id="listaRutas">
-                <p style="color:#555; font-size:0.85rem;">Cargando rutas...</p>
-            </div>
-
-            <!-- Leyenda -->
-            <div class="leyenda">
-                <p style="color:#8b949e; font-size:0.8rem; margin-bottom:4px;">Niveles de tránsito</p>
-                <div class="leyenda-item">
-                    <div class="leyenda-color" style="background:#39d353;"></div>
-                    <span>Bajo — Fluido</span>
-                </div>
-                <div class="leyenda-item">
-                    <div class="leyenda-color" style="background:#f0c030;"></div>
-                    <span>Medio — Moderado</span>
-                </div>
-                <div class="leyenda-item">
-                    <div class="leyenda-color" style="background:#f85149;"></div>
-                    <span>Alto — Congestionado</span>
+        <!-- Encabezado -->
+        <header class="encabezado">
+            <h1>🚦 TrafficFlow</h1>
+            <div class="nav-botones">
+                <button onclick="window.location.href='/Incidentes'" style="
+                    background: transparent;
+                    border: 1px solid #f85149;
+                    color: #f85149;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    transition: all 0.3s ease;
+                    animation: pulso 2s infinite;
+                    " onmouseover="this.style.background='#f85149'; this.style.color='white';"
+                        onmouseout="this.style.background='transparent'; this.style.color='#f85149';">
+                    🚨 Incidentes
+                </button>
+                <button onclick="window.location.href='/Emergencias'" style="
+                    background: transparent;
+                    border: 1px solid #f0c030;
+                    color: #f0c030;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    transition: all 0.3s ease;
+                    animation: pulsoAmarillo 2s infinite;
+                    " onmouseover="this.style.background='#f0c030'; this.style.color='black';"
+                        onmouseout="this.style.background='transparent'; this.style.color='#f0c030';">
+                    ⚡ Emergencias
+                </button>
+                <div class="indicador-conexion">
+                    <span></span> En tiempo real
                 </div>
             </div>
-        </aside>
+        </header>
+
+        <!-- Contenido principal -->
+        <div class="contenedor-principal">
+            <div id="mapa"></div>
+
+            <!-- Panel lateral -->
+            <aside class="panel-lateral">
+                <h2>Rutas Activas</h2>
+                <div id="listaRutas">
+                    <p style="color:#555; font-size:0.85rem;">Cargando rutas...</p>
+                </div>
+                <div class="leyenda">
+                    <p style="color:#8b949e; font-size:0.8rem; margin-bottom:4px;">Niveles de tránsito</p>
+                    <div class="leyenda-item">
+                        <div class="leyenda-color" style="background:#39d353;"></div>
+                        <span>Bajo — Fluido</span>
+                    </div>
+                    <div class="leyenda-item">
+                        <div class="leyenda-color" style="background:#f0c030;"></div>
+                        <span>Medio — Moderado</span>
+                    </div>
+                    <div class="leyenda-item">
+                        <div class="leyenda-color" style="background:#f85149;"></div>
+                        <span>Alto — Congestionado</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
     </div>
 
-    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
     <script src="~/js/mapaTransito.js"></script>
-
 </body>
 </html>

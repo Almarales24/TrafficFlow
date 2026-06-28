@@ -9,6 +9,7 @@ constructor.Services.AddSignalR();
 constructor.Services.AddSingleton<ServicioMongoDB>();
 constructor.Services.AddScoped<ServicioTransito>();
 constructor.Services.AddScoped<ServicioIncidentes>();
+constructor.Services.AddScoped<ServicioEmergencias>();
 
 var aplicacion = constructor.Build();
 
