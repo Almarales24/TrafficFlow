@@ -1,0 +1,77 @@
+﻿@model List<TrafficFlow.Modelos.Incidente>
+
+@{
+    ViewData["Title"] = "Incidentes";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>🚨 Incidentes Activos</h1>
+        <a href="/Rutas" style="color:var(--color-azul);">← Volver al mapa</a>
+    </header>
+
+    <div style="display:flex; flex:1; overflow:hidden;">
+
+        <!-- Lista de incidentes -->
+        <div class="panel-lateral" style="width:100%; max-width:500px;">
+            <h2>Incidentes reportados</h2>
+            <div id="listaIncidentes">
+                @if (Model.Count == 0)
+                {
+                    <p style="color:#555;">No hay incidentes activos.</p>
+                }
+                @foreach (var incidente in Model)
+                {
+                    <div class="tarjeta-ruta" id="incidente-@incidente.Id">
+                        <h3>@incidente.Tipo.ToUpper()</h3>
+                        <p>@incidente.Descripcion</p>
+                        <p style="color:#8b949e;">📍 @incidente.Ubicacion</p>
+                        <p style="font-size:0.75rem; color:#555;">
+                            @incidente.CreadoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                        </p>
+                        <button onclick="desactivar('@incidente.Id')"
+                                style="margin-top:8px; background:var(--color-rojo); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">
+                            Desactivar
+                        </button>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <!-- Formulario nuevo incidente -->
+        <div class="panel-lateral" style="width:100%; max-width:400px;">
+            <h2>Reportar incidente</h2>
+            <form action="/Incidentes/Crear" method="post" style="display:flex; flex-direction:column; gap:10px;">
+                <select name="Tipo" style="background:var(--color-fondo); color:var(--color-texto); border:1px solid var(--color-borde); padding:8px; border-radius:6px;">
+                    <option value="accidente">Accidente</option>
+                    <option value="viasCerradas">Vías Cerradas</option>
+                    <option value="obras">Obras</option>
+                    <option value="otro">Otro</option>
+                </select>
+                <input name="Descripcion" placeholder="Descripción del incidente"
+                       style="background:var(--color-fondo); color:var(--color-texto); border:1px solid var(--color-borde); padding:8px; border-radius:6px;" />
+                <input name="Ubicacion" placeholder="Ubicación (ej: Calle 72 con Carrera 7)"
+                       style="background:var(--color-fondo); color:var(--color-texto); border:1px solid var(--color-borde); padding:8px; border-radius:6px;" />
+                <button type="submit"
+                        style="background:var(--color-azul); color:white; border:none; padding:10px; border-radius:6px; cursor:pointer;">
+                    Reportar
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/notificaciones.js"></script>
+
+</body>
+</html>

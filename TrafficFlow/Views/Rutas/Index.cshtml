@@ -9,22 +9,44 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-
-    <!-- Estilos -->
     <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <style>
-            html, body { height: 100%; overflow: hidden; }
+        html, body { height: 100%; overflow: hidden; }
+        @@keyframes pulso {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(248, 81, 73, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 0 8px rgba(248, 81, 73, 0);
+            }
+        }
     </style>
 </head>
 <body>
-
-    <!-- Encabezado -->
     <header class="encabezado">
         <h1>🚦 TrafficFlow</h1>
+        <button onclick="window.location.href='/Incidentes'" style="
+            background: transparent;
+            border: 1px solid var(--color-rojo);
+            color: var(--color-rojo);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            animation: pulso 2s infinite;
+            " onmouseover="this.style.background='var(--color-rojo)'; this.style.color='white';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--color-rojo)';">
+            🚨 Incidentes
+        </button>
         <div class="indicador-conexion">
             <span></span> En tiempo real
+        </div>
+    </header>
+
+
         </div>
     </header>
 

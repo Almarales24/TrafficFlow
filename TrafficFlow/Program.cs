@@ -8,8 +8,9 @@ constructor.Services.AddControllersWithViews();
 constructor.Services.AddSignalR();
 constructor.Services.AddSingleton<ServicioMongoDB>();
 constructor.Services.AddScoped<ServicioTransito>();
+constructor.Services.AddScoped<ServicioIncidentes>();
 
-    var aplicacion = constructor.Build();
+var aplicacion = constructor.Build();
 
 // Middleware
 if (!aplicacion.Environment.IsDevelopment())

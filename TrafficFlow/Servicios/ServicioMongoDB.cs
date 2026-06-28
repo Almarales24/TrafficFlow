@@ -72,5 +72,11 @@ namespace TrafficFlow.Servicios
         {
             return _baseDatos.GetCollection<Ruta>("rutas");
         }
+
+        public IMongoCollection<Incidente> ObtenerColeccionIncidentes()
+        {
+            return _baseDatos.GetCollection<Incidente>("incidentes");
+        }
+
     }
 }
