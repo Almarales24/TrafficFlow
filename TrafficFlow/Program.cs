@@ -11,6 +11,8 @@ constructor.Services.AddScoped<ServicioTransito>();
 constructor.Services.AddScoped<ServicioIncidentes>();
 constructor.Services.AddScoped<ServicioEmergencias>();
 constructor.Services.AddScoped<ServicioHistorial>();
+constructor.Services.AddScoped<ServicioSimulacion>();
+
 
 var aplicacion = constructor.Build();
 

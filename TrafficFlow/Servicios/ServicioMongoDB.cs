@@ -88,5 +88,12 @@ namespace TrafficFlow.Servicios
             return _baseDatos.GetCollection<RegistroTransito>("historial");
         }
 
+        public IMongoCollection<SimulacionHorario> ObtenerColeccionSimulaciones()
+        {
+            return _baseDatos.GetCollection<SimulacionHorario>("simulaciones");
+        }
+
+
+
     }
 }

@@ -1,0 +1,242 @@
+﻿@model List<TrafficFlow.Modelos.SimulacionHorario>
+
+@{
+    ViewData["Title"] = "Simulación de Horarios Pico";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+    <style>
+            .contenedor-simulacion {
+                display: flex;
+                flex: 1;
+                overflow: hidden;
+            }
+
+            .panel-formulario {
+                width: 380px;
+                background: var(--color-panel);
+                border-right: 1px solid var(--color-borde);
+                padding: 24px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .panel-resultados {
+                flex: 1;
+                padding: 24px;
+                overflow-y: auto;
+            }
+
+            .campo {
+                display: flex;
+                flex-direction: column;
+                gap: 6px;
+            }
+
+                .campo label {
+                    font-size: 0.8rem;
+                    color: #8b949e;
+                }
+
+                .campo input, .campo select {
+                    background: var(--color-fondo);
+                    color: var(--color-texto);
+                    border: 1px solid var(--color-borde);
+                    padding: 10px;
+                    border-radius: 6px;
+                    font-size: 0.9rem;
+                    transition: border-color 0.2s;
+                }
+
+                    .campo input:focus, .campo select:focus {
+                        outline: none;
+                        border-color: var(--color-azul);
+                    }
+
+            .btn-ejecutar {
+                background: var(--color-azul);
+                color: white;
+                border: none;
+                padding: 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+                .btn-ejecutar:hover {
+                    opacity: 0.85;
+                    transform: scale(1.02);
+                }
+
+            .tarjeta-simulacion {
+                background: var(--color-panel);
+                border: 1px solid var(--color-borde);
+                border-radius: 8px;
+                padding: 16px;
+                margin-bottom: 16px;
+                transition: border-color 0.2s;
+            }
+
+                .tarjeta-simulacion:hover {
+                    border-color: var(--color-azul);
+                }
+
+                .tarjeta-simulacion h3 {
+                    color: var(--color-azul);
+                    margin-bottom: 8px;
+                }
+
+            .resultado-ruta {
+                display: flex;
+                justify-content: space-between;
+                padding: 8px 0;
+                border-bottom: 1px solid var(--color-borde);
+                font-size: 0.85rem;
+            }
+
+                .resultado-ruta:last-child {
+                    border-bottom: none;
+                }
+
+            .factor-badge {
+                background: var(--color-fondo);
+                border: 1px solid var(--color-borde);
+                padding: 2px 10px;
+                border-radius: 12px;
+                font-size: 0.8rem;
+                color: var(--color-amarillo);
+            }
+
+            .cargando {
+                text-align: center;
+                padding: 40px;
+                color: #555;
+                display: none;
+            }
+
+            @@keyframes girar {
+                from {
+                    transform: rotate(0deg);
+                }
+
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            .icono-carga {
+                display: inline-block;
+                animation: girar 1s linear infinite;
+                font-size: 2rem;
+            }
+    </style>
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>⏱️ Simulación de Horarios Pico</h1>
+        <a href="/Rutas" style="color:var(--color-azul);">← Volver al mapa</a>
+    </header>
+
+    <div class="contenedor-simulacion">
+
+        <!-- Formulario -->
+        <div class="panel-formulario">
+            <h2 style="color:var(--color-azul); margin:0;">Nueva simulación</h2>
+
+            <div class="campo">
+                <label>Nombre de la simulación</label>
+                <input type="text" id="nombreSim" placeholder="Ej: Hora pico mañana" />
+            </div>
+
+            <div class="campo">
+                <label>Hora inicio</label>
+                <select id="horarioInicio">
+                    @for (int h = 0; h < 24; h++)
+                    {
+                        <option value="@h" selected="@(h == 7)">@h:00</option>
+                    }
+                </select>
+            </div>
+
+            <div class="campo">
+                <label>Hora fin</label>
+                <select id="horarioFin">
+                    @for (int h = 0; h < 24; h++)
+                    {
+                        <option value="@h" selected="@(h == 9)">@h:00</option>
+                    }
+                </select>
+            </div>
+
+            <div class="campo">
+                <label>Factor de congestión</label>
+                <select id="factorCongesion">
+                    <option value="1.5">1.5x — Moderado</option>
+                    <option value="2.0" selected>2.0x — Alto</option>
+                    <option value="3.0">3.0x — Crítico</option>
+                    <option value="4.0">4.0x — Extremo</option>
+                </select>
+            </div>
+
+            <button class="btn-ejecutar" onclick="ejecutarSimulacion()">
+                ▶ Ejecutar simulación
+            </button>
+
+            <div class="cargando" id="cargando">
+                <span class="icono-carga">⚙️</span>
+                <p>Simulando...</p>
+            </div>
+        </div>
+
+        <!-- Resultados -->
+        <div class="panel-resultados">
+            <h2 style="margin-bottom:20px;">Simulaciones anteriores</h2>
+
+            <div id="listaSimulaciones">
+                @if (Model.Count == 0)
+                {
+                    <p style="color:#555;">No hay simulaciones aún. Ejecuta tu primera simulación.</p>
+                }
+                @foreach (var sim in Model)
+                {
+                    <div class="tarjeta-simulacion">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <h3>@sim.Nombre</h3>
+                            <span class="factor-badge">x@sim.FactorCongesion congestión</span>
+                        </div>
+                        <p style="color:#8b949e; font-size:0.8rem; margin-bottom:12px;">
+                            @sim.HorarioInicio.Hours:00 → @sim.HorarioFin.Hours:00 |
+                            @sim.CreadoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                        </p>
+                        @foreach (var resultado in sim.Resultados)
+                        {
+                            <div class="resultado-ruta">
+                                <span>@resultado.NombreRuta</span>
+                                <span class="nivel-@resultado.NivelTransitoSimulado">
+                                    @resultado.VelocidadSimulada km/h — @resultado.NivelTransitoSimulado
+                                </span>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/js/simulacionHorario.js"></script>
+
+</body>
+</html>
