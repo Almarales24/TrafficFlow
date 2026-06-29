@@ -93,6 +93,11 @@ namespace TrafficFlow.Servicios
             return _baseDatos.GetCollection<SimulacionHorario>("simulaciones");
         }
 
+        public IMongoCollection<RutaFavorita> ObtenerColeccionFavoritos()
+        {
+            return _baseDatos.GetCollection<RutaFavorita>("favoritos");
+        }
+
 
 
     }

@@ -13,6 +13,7 @@ constructor.Services.AddScoped<ServicioEmergencias>();
 constructor.Services.AddScoped<ServicioHistorial>();
 constructor.Services.AddScoped<ServicioSimulacion>();
 constructor.Services.AddScoped<ServicioPDF>();
+constructor.Services.AddScoped<ServicioFavoritos>();
 
 
 var aplicacion = constructor.Build();
