@@ -1,0 +1,278 @@
+﻿@model TrafficFlow.Modelos.DatoMeteorologico
+
+@{
+    ViewData["Title"] = "Meteorología";
+    Layout = null;
+    var historial = ViewBag.Historial as List<TrafficFlow.Modelos.DatoMeteorologico> ?? new();
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+    <style>
+            .contenedor-meteo {
+                display: flex;
+                flex: 1;
+                overflow: hidden;
+                gap: 0;
+            }
+
+            .panel-clima {
+                width: 400px;
+                background: var(--color-panel);
+                border-right: 1px solid var(--color-borde);
+                padding: 32px 24px;
+                overflow-y: auto;
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .panel-historial {
+                flex: 1;
+                padding: 24px;
+                overflow-y: auto;
+            }
+
+            .tarjeta-clima {
+                background: var(--color-fondo);
+                border: 1px solid var(--color-borde);
+                border-radius: 12px;
+                padding: 24px;
+                text-align: center;
+                animation: flotacion 4s ease-in-out infinite;
+            }
+
+            @@keyframes flotacion {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-6px);
+                }
+            }
+
+            .temperatura {
+                font-size: 4rem;
+                font-weight: bold;
+                color: var(--color-azul);
+                margin: 8px 0;
+            }
+
+            .descripcion-clima {
+                font-size: 1.1rem;
+                color: #8b949e;
+                text-transform: capitalize;
+                margin-bottom: 16px;
+            }
+
+            .datos-clima {
+                display: flex;
+                justify-content: space-around;
+                margin-top: 16px;
+                padding-top: 16px;
+                border-top: 1px solid var(--color-borde);
+            }
+
+            .dato-item {
+                text-align: center;
+            }
+
+                .dato-item span {
+                    display: block;
+                    font-size: 0.75rem;
+                    color: #8b949e;
+                    margin-top: 4px;
+                }
+
+            .icono-clima {
+                font-size: 3rem;
+                animation: brillar 3s ease-in-out infinite;
+            }
+
+            @@keyframes brillar {
+                0%, 100% {
+                    filter: brightness(1);
+                }
+
+                50% {
+                    filter: brightness(1.3);
+                }
+            }
+
+            .impacto-badge {
+                display: inline-block;
+                padding: 6px 16px;
+                border-radius: 20px;
+                font-size: 0.85rem;
+                font-weight: bold;
+                margin-top: 12px;
+            }
+
+            .impacto-alto {
+                background: rgba(248,81,73,0.2);
+                color: #f85149;
+                border: 1px solid #f85149;
+            }
+
+            .impacto-medio {
+                background: rgba(240,192,48,0.2);
+                color: #f0c030;
+                border: 1px solid #f0c030;
+            }
+
+            .impacto-bajo {
+                background: rgba(57,211,83,0.2);
+                color: #39d353;
+                border: 1px solid #39d353;
+            }
+
+            .btn-actualizar {
+                background: var(--color-azul);
+                color: white;
+                border: none;
+                padding: 12px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 0.95rem;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                width: 100%;
+            }
+
+                .btn-actualizar:hover {
+                    opacity: 0.85;
+                    transform: scale(1.02);
+                }
+
+            .tabla-historial {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.85rem;
+            }
+
+                .tabla-historial th {
+                    background: var(--color-panel);
+                    color: var(--color-azul);
+                    padding: 12px;
+                    text-align: left;
+                    border-bottom: 1px solid var(--color-borde);
+                }
+
+                .tabla-historial td {
+                    padding: 12px;
+                    border-bottom: 1px solid var(--color-borde);
+                    transition: background 0.2s;
+                }
+
+                .tabla-historial tr:hover td {
+                    background: var(--color-panel);
+                }
+    </style>
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>🌤️ Meteorología y Tráfico</h1>
+        <a href="/Rutas" style="color:var(--color-azul);">← Volver al mapa</a>
+    </header>
+
+    <div class="contenedor-meteo">
+
+        <!-- Panel clima actual -->
+        <div class="panel-clima">
+            <h2 style="color:var(--color-azul); margin:0;">Clima actual — Bogotá</h2>
+
+            <div class="tarjeta-clima" id="tarjetaClima">
+                <div class="icono-clima" id="iconoClima">
+                    @(Model.Condicion switch
+                    {
+                        "lluvia" => "🌧️",
+                        "tormenta" => "⛈️",
+                        "niebla" => "🌫️",
+                        "nublado" => "☁️",
+                        _ => "☀️"
+                    })
+                </div>
+                <div class="temperatura" id="temperatura">@Model.Temperatura°C</div>
+                <div class="descripcion-clima" id="descripcion">@Model.Descripcion</div>
+
+                <div class="datos-clima">
+                    <div class="dato-item">
+                        💧 <strong id="humedad">@Model.Humedad%</strong>
+                        <span>Humedad</span>
+                    </div>
+                    <div class="dato-item">
+                        💨 <strong id="viento">@Model.Viento km/h</strong>
+                        <span>Viento</span>
+                    </div>
+                </div>
+
+                <div class="impacto-badge impacto-@Model.ImpactoTransito" id="impactoBadge">
+                    Impacto en tráfico: @Model.ImpactoTransito
+                </div>
+            </div>
+
+            <div style="background:var(--color-fondo); border:1px solid var(--color-borde); border-radius:8px; padding:16px;">
+                <h3 style="margin:0 0 8px; font-size:0.9rem;">¿Cómo afecta al tráfico?</h3>
+                <p style="font-size:0.8rem; color:#8b949e; line-height:1.6;">
+                    @(Model.ImpactoTransito switch
+                    {
+                        "alto" => "⛈️ Condiciones severas. Se esperan reducciones significativas en la velocidad y posibles cierres de vías.",
+                        "medio" => "🌧️ Condiciones moderadas. El tráfico puede verse afectado con reducciones de velocidad en algunas vías.",
+                        _ => "☀️ Condiciones favorables. No se esperan impactos significativos en el tráfico."
+                    })
+                </p>
+            </div>
+
+            <button class="btn-actualizar" onclick="actualizarClima()">
+                🔄 Actualizar clima
+            </button>
+
+            <p style="font-size:0.75rem; color:#555; text-align:center;">
+                Última actualización: @Model.RegistradoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+            </p>
+        </div>
+
+        <!-- Historial -->
+        <div class="panel-historial">
+            <h2 style="margin-bottom:20px;">Historial meteorológico</h2>
+
+            <table class="tabla-historial">
+                <thead>
+                    <tr>
+                        <th>Condición</th>
+                        <th>Temperatura</th>
+                        <th>Humedad</th>
+                        <th>Viento</th>
+                        <th>Impacto</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody id="cuerpoHistorialMeteo">
+                    @foreach (var dato in historial)
+                    {
+                        <tr>
+                            <td>@dato.Descripcion</td>
+                            <td>@dato.Temperatura°C</td>
+                            <td>@dato.Humedad%</td>
+                            <td>@dato.Viento km/h</td>
+                            <td><span class="impacto-badge impacto-@dato.ImpactoTransito">@dato.ImpactoTransito</span></td>
+                            <td>@dato.RegistradoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    <script src="~/js/meteorologia.js"></script>
+
+</body>
+</html>

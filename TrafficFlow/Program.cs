@@ -14,6 +14,8 @@ constructor.Services.AddScoped<ServicioHistorial>();
 constructor.Services.AddScoped<ServicioSimulacion>();
 constructor.Services.AddScoped<ServicioPDF>();
 constructor.Services.AddScoped<ServicioFavoritos>();
+constructor.Services.AddHttpClient();
+constructor.Services.AddScoped<ServicioMeteorologico>();
 
 
 var aplicacion = constructor.Build();

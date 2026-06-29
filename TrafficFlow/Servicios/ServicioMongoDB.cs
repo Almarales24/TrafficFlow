@@ -98,6 +98,10 @@ namespace TrafficFlow.Servicios
             return _baseDatos.GetCollection<RutaFavorita>("favoritos");
         }
 
+        public IMongoCollection<DatoMeteorologico> ObtenerColeccionMeteorologica()
+        {
+            return _baseDatos.GetCollection<DatoMeteorologico>("meteorologia");
+        }
 
 
     }
