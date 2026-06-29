@@ -1,10 +1,8 @@
-﻿// Conexión SignalR
-const conexion = new signalR.HubConnectionBuilder()
+﻿const conexion = new signalR.HubConnectionBuilder()
     .withUrl("/concentradorTransito")
     .withAutomaticReconnect()
     .build();
 
-// Mapa Leaflet
 let mapa;
 let capasRutas = {};
 
@@ -16,7 +14,6 @@ const coloresTransito = {
 
 function inicializarMapa() {
     mapa = L.map("mapa").setView([4.7110, -74.0721], 13);
-
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap",
         maxZoom: 19
@@ -24,7 +21,6 @@ function inicializarMapa() {
 }
 
 function dibujarRutas(rutas) {
-    // Limpiar capas anteriores
     Object.values(capasRutas).forEach(capa => mapa.removeLayer(capa));
     capasRutas = {};
 
@@ -34,17 +30,11 @@ function dibujarRutas(rutas) {
     rutas.forEach(ruta => {
         if (!ruta.segmentos || ruta.segmentos.length === 0) return;
 
-        // Dibujar cada segmento en el mapa
         ruta.segmentos.forEach(segmento => {
             const color = coloresTransito[segmento.nivelTransito] || coloresTransito.bajo;
-
             const linea = L.polyline(
                 generarCoordenadasSimuladas(ruta.nombre),
-                {
-                    color: color,
-                    weight: 5,
-                    opacity: 0.8
-                }
+                { color: color, weight: 5, opacity: 0.8 }
             ).addTo(mapa);
 
             linea.bindPopup(`
@@ -57,7 +47,6 @@ function dibujarRutas(rutas) {
             capasRutas[ruta.id] = linea;
         });
 
-        // Tarjeta en panel lateral
         const nivelGeneral = ruta.segmentos[0]?.nivelTransito || "bajo";
         const tarjeta = document.createElement("div");
         tarjeta.className = "tarjeta-ruta";
@@ -83,55 +72,65 @@ function dibujarRutas(rutas) {
     });
 }
 
-// Coordenadas simuladas por nombre de ruta (Bogotá)
 function generarCoordenadasSimuladas(nombreRuta) {
     const coordenadas = {
         "Ruta Centro - Norte": [
-            [4.5981, -74.0761],
-            [4.6200, -74.0700],
-            [4.6500, -74.0580],
-            [4.6800, -74.0500],
-            [4.7110, -74.0300]
+            [4.5981, -74.0761], [4.6200, -74.0700],
+            [4.6500, -74.0580], [4.6800, -74.0500], [4.7110, -74.0300]
         ],
         "Ruta Occidente - Centro": [
-            [4.6800, -74.1500],
-            [4.6700, -74.1200],
-            [4.6600, -74.1000],
-            [4.6500, -74.0800],
-            [4.6400, -74.0600]
+            [4.6800, -74.1500], [4.6700, -74.1200],
+            [4.6600, -74.1000], [4.6500, -74.0800], [4.6400, -74.0600]
         ],
         "Ruta Sur - Centro": [
-            [4.5500, -74.1000],
-            [4.5700, -74.0900],
-            [4.5900, -74.0800],
-            [4.6100, -74.0750],
-            [4.6300, -74.0700]
+            [4.5500, -74.1000], [4.5700, -74.0900],
+            [4.5900, -74.0800], [4.6100, -74.0750], [4.6300, -74.0700]
         ]
     };
-
-    return coordenadas[nombreRuta] || [
-        [4.6097, -74.0817],
-        [4.6500, -74.0600]
-    ];
+    return coordenadas[nombreRuta] || [[4.6097, -74.0817], [4.6500, -74.0600]];
 }
 
-// Eventos SignalR
+function toggleModoNocturno() {
+    const body = document.body;
+    const btn = document.getElementById("btnModoNocturno");
+    const esDia = body.classList.toggle("modo-dia");
+
+    if (esDia) {
+        btn.textContent = "🌙 Modo oscuro";
+        mapa.eachLayer(layer => {
+            if (layer._url) {
+                mapa.removeLayer(layer);
+                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                    attribution: "© OpenStreetMap",
+                    maxZoom: 19
+                }).addTo(mapa);
+            }
+        });
+    } else {
+        btn.textContent = "☀️ Modo claro";
+        mapa.eachLayer(layer => {
+            if (layer._url) {
+                mapa.removeLayer(layer);
+                L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+                    attribution: "© OpenStreetMap © CARTO",
+                    maxZoom: 19
+                }).addTo(mapa);
+            }
+        });
+    }
+}
+
 conexion.on("RecibirRutas", (rutas) => {
     dibujarRutas(rutas);
 });
 
-// Iniciar conexión
 async function iniciar() {
     try {
         await conexion.start();
-        console.log("Conectado al concentrador de tránsito");
         await conexion.invoke("ObtenerRutasActualizadas");
-
-        // Actualizar cada 30 segundos
         setInterval(async () => {
             await conexion.invoke("ObtenerRutasActualizadas");
         }, 30000);
-
     } catch (error) {
         console.error("Error de conexión:", error);
         setTimeout(iniciar, 5000);
