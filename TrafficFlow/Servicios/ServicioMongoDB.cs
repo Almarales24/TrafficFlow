@@ -83,5 +83,10 @@ namespace TrafficFlow.Servicios
             return _baseDatos.GetCollection<Emergencia>("emergencias");
         }
 
+        public IMongoCollection<RegistroTransito> ObtenerColeccionHistorial()
+        {
+            return _baseDatos.GetCollection<RegistroTransito>("historial");
+        }
+
     }
 }

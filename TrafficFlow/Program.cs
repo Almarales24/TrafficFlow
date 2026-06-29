@@ -10,6 +10,7 @@ constructor.Services.AddSingleton<ServicioMongoDB>();
 constructor.Services.AddScoped<ServicioTransito>();
 constructor.Services.AddScoped<ServicioIncidentes>();
 constructor.Services.AddScoped<ServicioEmergencias>();
+constructor.Services.AddScoped<ServicioHistorial>();
 
 var aplicacion = constructor.Build();
 

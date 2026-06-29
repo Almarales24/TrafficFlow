@@ -1,0 +1,228 @@
+﻿@model List<TrafficFlow.Modelos.RegistroTransito>
+
+@{
+    ViewData["Title"] = "Historial de Tránsito";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+    <style>
+            .contenedor-historial {
+                padding: 24px;
+                overflow-y: auto;
+                flex: 1;
+            }
+
+            .filtros {
+                display: flex;
+                gap: 12px;
+                margin-bottom: 24px;
+                flex-wrap: wrap;
+                align-items: flex-end;
+            }
+
+            .filtros input, .filtros select {
+                background: var(--color-panel);
+                color: var(--color-texto);
+                border: 1px solid var(--color-borde);
+                padding: 8px 12px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+            }
+
+            .btn-filtrar {
+                background: var(--color-azul);
+                color: white;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .btn-filtrar:hover {
+                opacity: 0.85;
+                transform: scale(1.02);
+            }
+
+            .btn-guardar {
+                background: var(--color-verde);
+                color: black;
+                border: none;
+                padding: 8px 20px;
+                border-radius: 6px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                font-weight: bold;
+            }
+
+            .btn-guardar:hover {
+                opacity: 0.85;
+                transform: scale(1.02);
+            }
+
+            .tabla-historial {
+                width: 100%;
+                border-collapse: collapse;
+                font-size: 0.85rem;
+            }
+
+            .tabla-historial th {
+                background: var(--color-panel);
+                color: var(--color-azul);
+                padding: 12px;
+                text-align: left;
+                border-bottom: 1px solid var(--color-borde);
+            }
+
+            .tabla-historial td {
+                padding: 12px;
+                border-bottom: 1px solid var(--color-borde);
+                transition: background 0.2s;
+            }
+
+            .tabla-historial tr:hover td {
+                background: var(--color-panel);
+            }
+
+            .badge-hora-pico {
+                background: var(--color-amarillo);
+                color: black;
+                padding: 2px 8px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: bold;
+            }
+
+            .resumen {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 24px;
+                flex-wrap: wrap;
+            }
+
+            .tarjeta-resumen {
+                background: var(--color-panel);
+                border: 1px solid var(--color-borde);
+                border-radius: 8px;
+                padding: 16px 24px;
+                flex: 1;
+                min-width: 150px;
+                text-align: center;
+            }
+
+            .tarjeta-resumen h3 {
+                font-size: 1.8rem;
+                color: var(--color-azul);
+                margin: 0;
+            }
+
+            .tarjeta-resumen p {
+                font-size: 0.8rem;
+                color: #8b949e;
+                margin: 4px 0 0;
+            }
+    </style>
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>📊 Historial de Tránsito</h1>
+        <a href="/Rutas" style="color:var(--color-azul);">← Volver al mapa</a>
+    </header>
+
+    <div class="contenedor-historial">
+
+        <!-- Resumen -->
+        <div class="resumen">
+            <div class="tarjeta-resumen">
+                <h3>@Model.Count</h3>
+                <p>Total registros</p>
+            </div>
+            <div class="tarjeta-resumen">
+                <h3 style="color:var(--color-rojo);">@Model.Count(r => r.NivelTransito == "alto")</h3>
+                <p>Trancones altos</p>
+            </div>
+            <div class="tarjeta-resumen">
+                <h3 style="color:var(--color-amarillo);">@Model.Count(r => r.HoraPico)</h3>
+                <p>En hora pico</p>
+            </div>
+            <div class="tarjeta-resumen">
+                <h3 style="color:var(--color-verde);">
+                    @(Model.Count > 0 ? Math.Round(Model.Average(r => r.VelocidadPromedio), 1) : 0) km/h
+                </h3>
+                <p>Velocidad promedio</p>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filtros">
+            <div>
+                <label style="font-size:0.8rem; color:#8b949e;">Desde</label>
+                <input type="date" id="fechaDesde" />
+            </div>
+            <div>
+                <label style="font-size:0.8rem; color:#8b949e;">Hasta</label>
+                <input type="date" id="fechaHasta" />
+            </div>
+            <div>
+                <label style="font-size:0.8rem; color:#8b949e;">Ruta</label>
+                <select id="filtroRuta">
+                    <option value="">Todas las rutas</option>
+                    @foreach (var ruta in Model.Select(r => r.NombreRuta).Distinct())
+                    {
+                        <option value="@ruta">@ruta</option>
+                    }
+                </select>
+            </div>
+            <button class="btn-filtrar" onclick="filtrar()">🔍 Filtrar</button>
+            <button class="btn-guardar" onclick="guardarEstado()">💾 Guardar estado actual</button>
+        </div>
+
+        <!-- Tabla -->
+        <table class="tabla-historial" id="tablaHistorial">
+            <thead>
+                <tr>
+                    <th>Ruta</th>
+                    <th>Nivel de tránsito</th>
+                    <th>Velocidad</th>
+                    <th>Incidentes</th>
+                    <th>Hora pico</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                @foreach (var registro in Model)
+                {
+                    <tr>
+                        <td>@registro.NombreRuta</td>
+                        <td class="nivel-@registro.NivelTransito">● @registro.NivelTransito</td>
+                        <td>@registro.VelocidadPromedio km/h</td>
+                        <td>@registro.TotalIncidentes</td>
+                        <td>
+                            @if (registro.HoraPico)
+                            {
+                                <span class="badge-hora-pico">⏰ Hora pico</span>
+                            }
+                            else
+                            {
+                                <span style="color:#555;">Normal</span>
+                            }
+                        </td>
+                        <td>@registro.FechaRegistro.ToLocalTime().ToString("dd/MM/yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <script src="~/js/historialTransito.js"></script>
+
+</body>
+</html>

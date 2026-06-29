@@ -86,6 +86,7 @@
         <header class="encabezado">
             <h1>🚦 TrafficFlow</h1>
             <div class="nav-botones">
+
                 <button onclick="window.location.href='/Incidentes'" style="
                     background: transparent;
                     border: 1px solid #f85149;
@@ -100,6 +101,8 @@
                         onmouseout="this.style.background='transparent'; this.style.color='#f85149';">
                     🚨 Incidentes
                 </button>
+
+
                 <button onclick="window.location.href='/Emergencias'" style="
                     background: transparent;
                     border: 1px solid #f0c030;
@@ -114,11 +117,32 @@
                         onmouseout="this.style.background='transparent'; this.style.color='#f0c030';">
                     ⚡ Emergencias
                 </button>
+
+
+                <button onclick="window.location.href='/Historial'" style="
+                    background: transparent;
+                    border: 1px solid var(--color-azul);
+                    color: var(--color-azul);
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    transition: all 0.3s ease;
+                    " onmouseover="this.style.background='var(--color-azul)'; this.style.color='white';"
+                        onmouseout="this.style.background='transparent'; this.style.color='var(--color-azul)';">
+                    📊 Historial
+                </button>
+
+
+
                 <div class="indicador-conexion">
                     <span></span> En tiempo real
                 </div>
             </div>
         </header>
+
+
+
 
         <!-- Contenido principal -->
         <div class="contenedor-principal">
