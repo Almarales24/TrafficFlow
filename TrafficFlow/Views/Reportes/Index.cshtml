@@ -1,0 +1,169 @@
+﻿@{
+    ViewData["Title"] = "Reportes PDF";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/estilosPrincipales.css" />
+    <style>
+            .contenedor-reportes {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                flex: 1;
+                padding: 40px;
+                gap: 32px;
+            }
+
+            .tarjeta-reporte {
+                background: var(--color-panel);
+                border: 1px solid var(--color-borde);
+                border-radius: 12px;
+                padding: 40px;
+                width: 100%;
+                max-width: 600px;
+                text-align: center;
+                transition: border-color 0.3s ease;
+            }
+
+                .tarjeta-reporte:hover {
+                    border-color: var(--color-azul);
+                }
+
+            .icono-pdf {
+                font-size: 4rem;
+                margin-bottom: 16px;
+                animation: flotacion 3s ease-in-out infinite;
+            }
+
+            @@keyframes flotacion {
+                0%, 100% {
+                    transform: translateY(0);
+                }
+
+                50% {
+                    transform: translateY(-10px);
+                }
+            }
+
+            .tarjeta-reporte h2 {
+                color: var(--color-azul);
+                margin-bottom: 12px;
+            }
+
+            .tarjeta-reporte p {
+                color: #8b949e;
+                margin-bottom: 24px;
+                line-height: 1.6;
+            }
+
+            .btn-descargar {
+                background: var(--color-azul);
+                color: white;
+                border: none;
+                padding: 14px 32px;
+                border-radius: 8px;
+                cursor: pointer;
+                font-size: 1rem;
+                font-weight: bold;
+                transition: all 0.3s ease;
+                text-decoration: none;
+                display: inline-block;
+            }
+
+                .btn-descargar:hover {
+                    opacity: 0.85;
+                    transform: scale(1.05);
+                    box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+                }
+
+            .info-reporte {
+                display: flex;
+                justify-content: center;
+                gap: 32px;
+                margin-top: 24px;
+                flex-wrap: wrap;
+            }
+
+            .info-item {
+                text-align: center;
+            }
+
+                .info-item span {
+                    display: block;
+                    font-size: 0.8rem;
+                    color: #8b949e;
+                    margin-top: 4px;
+                }
+
+            .estado-generacion {
+                display: none;
+                margin-top: 16px;
+                color: var(--color-verde);
+                font-size: 0.9rem;
+                animation: parpadeo 1s infinite;
+            }
+
+            @@keyframes parpadeo {
+                0%, 100% {
+                    opacity: 1;
+                }
+
+                50% {
+                    opacity: 0.4;
+                }
+            }
+    </style>
+</head>
+<body>
+
+    <header class="encabezado">
+        <h1>📄 Reportes PDF</h1>
+        <a href="/Rutas" style="color:var(--color-azul);">← Volver al mapa</a>
+    </header>
+
+    <div class="contenedor-reportes">
+
+        <div class="tarjeta-reporte">
+            <div class="icono-pdf">📊</div>
+            <h2>Reporte Completo de Tráfico</h2>
+            <p>
+                Genera un reporte PDF con el estado actual de todas las rutas,
+                estadísticas de tráfico y los últimos registros del historial.
+            </p>
+
+            <a href="/Reportes/Descargar" class="btn-descargar" onclick="mostrarEstado()">
+                ⬇ Descargar Reporte PDF
+            </a>
+
+            <div class="estado-generacion" id="estadoGeneracion">
+                ⚙️ Generando reporte...
+            </div>
+
+            <div class="info-reporte">
+                <div class="info-item">
+                    📍 <span>Rutas activas</span>
+                </div>
+                <div class="info-item">
+                    📈 <span>Estadísticas</span>
+                </div>
+                <div class="info-item">
+                    🕐 <span>Historial reciente</span>
+                </div>
+                <div class="info-item">
+                    🚨 <span>Niveles de tráfico</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="~/js/reportes.js"></script>
+
+</body>
+</html>
