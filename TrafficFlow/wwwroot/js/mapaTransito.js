@@ -14,11 +14,26 @@ const coloresTransito = {
 
 function inicializarMapa() {
     mapa = L.map("mapa").setView([4.7110, -74.0721], 13);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap",
-        maxZoom: 19
-    }).addTo(mapa);
+
+    // Capa base TomTom
+    L.tileLayer(
+        `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
+        { attribution: "© TomTom", maxZoom: 19 }
+    ).addTo(mapa);
+
+    // Capa de tráfico en tiempo real
+    L.tileLayer(
+        `https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
+        { attribution: "© TomTom Traffic", maxZoom: 19, opacity: 0.7 }
+    ).addTo(mapa);
+
+    // Capa de incidentes TomTom
+    L.tileLayer(
+        `https://api.tomtom.com/traffic/map/4/tile/incidents/s3/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
+        { attribution: "© TomTom Incidents", maxZoom: 19, opacity: 0.9 }
+    ).addTo(mapa);
 }
+
 
 function dibujarRutas(rutas) {
     Object.values(capasRutas).forEach(capa => mapa.removeLayer(capa));
@@ -95,29 +110,29 @@ function toggleModoNocturno() {
     const btn = document.getElementById("btnModoNocturno");
     const esDia = body.classList.toggle("modo-dia");
 
+    mapa.eachLayer(layer => {
+        if (layer._url) mapa.removeLayer(layer);
+    });
+
     if (esDia) {
         btn.textContent = "🌙 Modo oscuro";
-        mapa.eachLayer(layer => {
-            if (layer._url) {
-                mapa.removeLayer(layer);
-                L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-                    attribution: "© OpenStreetMap",
-                    maxZoom: 19
-                }).addTo(mapa);
-            }
-        });
+        L.tileLayer(
+            `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
+            { attribution: "© TomTom", maxZoom: 19 }
+        ).addTo(mapa);
     } else {
         btn.textContent = "☀️ Modo claro";
-        mapa.eachLayer(layer => {
-            if (layer._url) {
-                mapa.removeLayer(layer);
-                L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-                    attribution: "© OpenStreetMap © CARTO",
-                    maxZoom: 19
-                }).addTo(mapa);
-            }
-        });
+        L.tileLayer(
+            `https://api.tomtom.com/map/1/tile/basic/night/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
+            { attribution: "© TomTom", maxZoom: 19 }
+        ).addTo(mapa);
     }
+
+    // Volver a agregar capa de tráfico
+    L.tileLayer(
+        `https://api.tomtom.com/traffic/map/4/tile/flow/relative/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
+        { attribution: "© TomTom Traffic", maxZoom: 19, opacity: 0.7 }
+    ).addTo(mapa);
 }
 
 conexion.on("RecibirRutas", (rutas) => {

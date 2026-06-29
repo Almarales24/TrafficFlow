@@ -178,20 +178,6 @@
                 </button>
 
 
-                <button id="btnModoNocturno" onclick="toggleModoNocturno()" style="
-                    background: transparent;
-                    border: 1px solid #8b949e;
-                    color: #8b949e;
-                    padding: 6px 14px;
-                    border-radius: 20px;
-                    cursor: pointer;
-                    font-size: 0.85rem;
-                    transition: all 0.3s ease;
-                    " onmouseover="this.style.background='#8b949e'; this.style.color='black';"
-                        onmouseout="this.style.background='transparent'; this.style.color='#8b949e';">
-                    ☀️ Modo claro
-                </button>
-
                 <button onclick="window.location.href='/Meteorologia'" style="
                     background: transparent;
                     border: 1px solid #79c0ff;
@@ -207,6 +193,21 @@
                 </button>
 
 
+                <button id="btnModoNocturno" onclick="toggleModoNocturno()" style="
+                    background: transparent;
+                    border: 1px solid #8b949e;
+                    color: #8b949e;
+                    padding: 6px 14px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 0.85rem;
+                    transition: all 0.3s ease;
+                    " onmouseover="this.style.background='#8b949e'; this.style.color='black';"
+                        onmouseout="this.style.background='transparent'; this.style.color='#8b949e';">
+                    ☀️ Modo claro
+                </button>
+
+
 
                 <div class="indicador-conexion">
                     <span></span> En tiempo real
@@ -214,35 +215,9 @@
             </div>
         </header>
 
-
-
-
         <!-- Contenido principal -->
         <div class="contenedor-principal">
             <div id="mapa"></div>
-
-            <!-- Panel lateral -->
-            <aside class="panel-lateral">
-                <h2>Rutas Activas</h2>
-                <div id="listaRutas">
-                    <p style="color:#555; font-size:0.85rem;">Cargando rutas...</p>
-                </div>
-                <div class="leyenda">
-                    <p style="color:#8b949e; font-size:0.8rem; margin-bottom:4px;">Niveles de tránsito</p>
-                    <div class="leyenda-item">
-                        <div class="leyenda-color" style="background:#39d353;"></div>
-                        <span>Bajo — Fluido</span>
-                    </div>
-                    <div class="leyenda-item">
-                        <div class="leyenda-color" style="background:#f0c030;"></div>
-                        <span>Medio — Moderado</span>
-                    </div>
-                    <div class="leyenda-item">
-                        <div class="leyenda-color" style="background:#f85149;"></div>
-                        <span>Alto — Congestionado</span>
-                    </div>
-                </div>
-            </aside>
         </div>
     </div>
 
