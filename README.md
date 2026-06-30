@@ -303,15 +303,17 @@ Puedes agregar imágenes aquí.
 ## Página principal
 
 ```
-/images/home.png
+<img width="1320" height="685" alt="image" src="https://github.com/user-attachments/assets/51468437-3ded-4331-975f-577f34bb9125" />
+
 ```
 
 ---
 
-## Consulta de tráfico
+## Consulta de incidentes
 
 ```
-/images/trafico.png
+<img width="1309" height="314" alt="image" src="https://github.com/user-attachments/assets/54d972a3-73a3-4273-8a07-5687b4421d7d" />
+
 ```
 
 ---
@@ -319,7 +321,8 @@ Puedes agregar imágenes aquí.
 ## Emergencias
 
 ```
-/images/emergencias.png
+<img width="1317" height="320" alt="image" src="https://github.com/user-attachments/assets/6780b679-ff10-4376-acbe-b88d21421783" />
+
 ```
 
 ---
@@ -327,9 +330,34 @@ Puedes agregar imágenes aquí.
 ## Favoritos
 
 ```
-/images/favoritos.png
+<img width="1307" height="414" alt="image" src="https://github.com/user-attachments/assets/b6996b44-2193-4f8d-919d-f3d4a228ebae" />
+
 ```
 
+## Historial
+```
+<img width="1311" height="422" alt="image" src="https://github.com/user-attachments/assets/b92e5d09-93e9-4f28-8ecf-00431f75225d" />
+
+```
+## Simulación
+```
+<img width="1304" height="560" alt="image" src="https://github.com/user-attachments/assets/55c75e92-4f6a-4691-b93b-e1df72a8025e" />
+
+```
+## Reportes PDF
+```
+<img width="1311" height="684" alt="image" src="https://github.com/user-attachments/assets/7ad2500f-26e5-4dd0-bdc4-e4c698bf91e4" />
+
+```
+## Meteorología
+```
+<img width="1366" height="770" alt="screencapture-localhost-7215-Meteorologia-2026-06-30-17_47_20" src="https://github.com/user-attachments/assets/a8e3ed3a-2c8c-46b9-ba1d-19ad275f7a3b" />
+```
+## Modo Noche
+```
+<img width="1365" height="682" alt="image" src="https://github.com/user-attachments/assets/5dc31d91-b3ab-46d2-95aa-729c3857a9ee" />
+
+```
 ---
 
 # 📈 Futuras mejoras
