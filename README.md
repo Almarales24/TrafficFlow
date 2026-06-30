@@ -345,37 +345,6 @@ Puedes agregar imágenes aquí.
 
 ---
 
-# 🤝 Contribuciones
-
-Las contribuciones son bienvenidas.
-
-Para contribuir:
-
-1. Haz un Fork.
-2. Crea una rama.
-
-```
-git checkout -b feature/nueva-funcionalidad
-```
-
-3. Realiza tus cambios.
-
-4. Haz commit.
-
-```
-git commit -m "Nueva funcionalidad"
-```
-
-5. Haz push.
-
-```
-git push origin feature/nueva-funcionalidad
-```
-
-6. Abre un Pull Request.
-
----
-
 # 👨‍💻 Autor
 
 **Almarales24**
