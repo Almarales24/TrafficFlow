@@ -1,13 +1,16 @@
-﻿const conexionNotificaciones = new signalR.HubConnectionBuilder()
+// Conexión SignalR para escuchar eventos del hub de tránsito
+const conexionNotificaciones = new signalR.HubConnectionBuilder()
     .withUrl("/concentradorTransito")
-    .withAutomaticReconnect()
+    .withAutomaticReconnect() // Reconecta si se pierde la conexión
     .build();
 
+// Cuando el servidor envía un incidente, lo muestra como alerta y lo agrega al panel
 conexionNotificaciones.on("RecibirIncidente", (incidente) => {
     mostrarNotificacion(incidente);
     agregarIncidenteAlPanel(incidente);
 });
 
+// Muestra una notificación flotante en la esquina superior derecha con los datos del incidente
 function mostrarNotificacion(incidente) {
     const notificacion = document.createElement("div");
     notificacion.style.cssText = `
@@ -33,12 +36,13 @@ function mostrarNotificacion(incidente) {
         </button>
     `;
     document.body.appendChild(notificacion);
-    setTimeout(() => notificacion.remove(), 8000);
+    setTimeout(() => notificacion.remove(), 8000); // Se elimina automáticamente tras 8 segundos
 }
 
+// Agrega una tarjeta del incidente al listado visible en la página
 function agregarIncidenteAlPanel(incidente) {
     const lista = document.getElementById("listaIncidentes");
-    if (!lista) return;
+    if (!lista) return; // Sale si el panel no existe en la vista actual
 
     const tarjeta = document.createElement("div");
     tarjeta.className = "tarjeta-ruta";
@@ -52,18 +56,20 @@ function agregarIncidenteAlPanel(incidente) {
             Desactivar
         </button>
     `;
-    lista.prepend(tarjeta);
+    lista.prepend(tarjeta); // Inserta la tarjeta al inicio de la lista
 }
 
+// Llama al servidor para marcar el incidente como inactivo y elimina su tarjeta del DOM
 async function desactivar(id) {
     await fetch(`/Incidentes/Desactivar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(id)
     });
-    document.getElementById(`incidente-${id}`)?.remove();
+    document.getElementById(`incidente-${id}`)?.remove(); // Quita la tarjeta del panel
 }
 
+// Inicia la conexión SignalR; reintenta cada 5 segundos si falla
 async function iniciarNotificaciones() {
     try {
         await conexionNotificaciones.start();
@@ -72,4 +78,5 @@ async function iniciarNotificaciones() {
     }
 }
 
+// Arranca el sistema de notificaciones cuando el DOM está listo
 document.addEventListener("DOMContentLoaded", iniciarNotificaciones);

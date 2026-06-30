@@ -1,8 +1,9 @@
-﻿@model List<TrafficFlow.Modelos.Emergencia>
+@* Recibe la lista de emergencias activas como modelo de la vista *@
+@model List<TrafficFlow.Modelos.Emergencia>
 
 @{
-    ViewData["Title"] = "Simulador de Emergencias";
-    Layout = null;
+    ViewData["Title"] = "Simulador de Emergencias"; @* Título de la pestaña del navegador *@
+    Layout = null; @* Desactiva el layout compartido; esta vista define su propio HTML completo *@
 }
 
 <!DOCTYPE html>
@@ -79,14 +80,17 @@
 
     <div style="display:flex; flex:1; overflow:hidden;">
 
+        @* Panel izquierdo: lista las emergencias activas cargadas desde el servidor *@
         <!-- Emergencias activas -->
         <div class="panel-lateral" style="width:100%; max-width:500px;">
             <h2>Emergencias Activas</h2>
             <div id="listaEmergencias">
+                @* Si no hay emergencias, muestra un mensaje informativo *@
                 @if (Model.Count == 0)
                 {
                     <p style="color:#555;">No hay emergencias activas.</p>
                 }
+                @* Itera sobre cada emergencia y genera una tarjeta con sus datos *@
                 @foreach (var emergencia in Model)
                 {
                     <div class="tarjeta-emergencia" id="emergencia-@emergencia.Id">
@@ -94,9 +98,11 @@
                         <p>@emergencia.Descripcion</p>
                         <p style="color:#8b949e;">Impacto: <strong class="nivel-alto">@emergencia.NivelImpacto</strong></p>
                         <p style="color:#8b949e;">Rutas afectadas: @emergencia.RutasAfectadas.Count</p>
+                        @* Fecha de creación formateada en hora local *@
                         <p style="font-size:0.75rem; color:#555;">
                             @emergencia.CreadoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                         </p>
+                        @* Botón que llama a la función JS para marcar la emergencia como finalizada *@
                         <button class="btn-finalizar" onclick="finalizar('@emergencia.Id')">
                             ✓ Finalizar emergencia
                         </button>
@@ -105,6 +111,7 @@
             </div>
         </div>
 
+        @* Panel derecho: formulario para crear y activar una nueva simulación de emergencia *@
         <!-- Formulario simulación -->
         <div class="panel-lateral" style="width:100%; max-width:400px;">
             <h2>Simular Emergencia</h2>
@@ -129,7 +136,9 @@
 
     </div>
 
+    @* Librería cliente de SignalR para recibir alertas en tiempo real *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    @* Script que gestiona la conexión y la lógica del simulador de emergencias *@
     <script src="~/js/simuladorEmergencias.js"></script>
 
 </body>

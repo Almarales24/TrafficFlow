@@ -1,12 +1,17 @@
-﻿@model TrafficFlow.Modelos.ErrorViewModel
+@* Enlaza esta vista con el modelo de errores personalizado del proyecto *@
+@model TrafficFlow.Modelos.ErrorViewModel
 
 @{
+    @* Define el título que se mostrará en el navegador *@
     ViewData["Title"] = "Error";
 }
 
+@* Título principal de la página de error *@
 <h1>Error</h1>
+@* Mensaje amigable informando al usuario que ocurrió un problema inesperado *@
 <h2>Ocurrió un error inesperado.</h2>
 
+@* Solo muestra el ID de la solicitud si está disponible, para facilitar la trazabilidad del error *@
 @if (Model.ShowRequestId)
 {
     <p>ID de solicitud: <strong>@Model.RequestId</strong></p>

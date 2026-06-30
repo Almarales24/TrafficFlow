@@ -1,28 +1,42 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
+    @* Codificación de caracteres UTF-8 para soporte completo de texto internacional *@
     <meta charset="utf-8" />
+    @* Hace que el diseño sea adaptable al ancho del dispositivo del usuario *@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    @* Título de la pestaña, combinando el título de la vista actual con el nombre de la app *@
     <title>@ViewData["Title"] - TrafficFlow</title>
+    @* Mapa de importación de módulos ES (reservado para compatibilidad con módulos nativos) *@
     <script type="importmap"></script>
+    @* Hoja de estilos de Bootstrap para el sistema de grillas y componentes base *@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* Estilos personalizados del proyecto; asp-append-version evita problemas de caché *@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* Estilos CSS aislados generados automáticamente por los componentes Razor del proyecto *@
     <link rel="stylesheet" href="~/TrafficFlow.styles.css" asp-append-version="true" />
 </head>
 <body>
+    @* Encabezado global de la aplicación con barra de navegación *@
     <header>
+        @* Barra de navegación responsiva de Bootstrap con fondo blanco y sombra inferior *@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
+                @* Enlace del logotipo que redirige al inicio de la aplicación *@
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TrafficFlow</a>
+                @* Botón que muestra u oculta el menú en pantallas pequeñas *@
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                @* Contenedor colapsable con los enlaces de navegación *@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
+                        @* Enlace a la página principal *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        @* Enlace a la política de privacidad *@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
@@ -31,20 +45,27 @@
             </div>
         </nav>
     </header>
+    @* Contenedor principal donde se inyecta el contenido de cada vista *@
     <div class="container">
+        @* Área semántica del contenido principal; @RenderBody() inserta aquí el HTML de la vista activa *@
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
+    @* Pie de página con aviso de copyright y enlace a privacidad *@
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2026 - TrafficFlow - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+    @* Librería jQuery, requerida por Bootstrap y los scripts de validación *@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* Bootstrap JS con Popper incluido, para los componentes interactivos como modales y dropdowns *@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    @* Script base del proyecto; asp-append-version agrega un hash para forzar recarga en cambios *@
     <script src="~/js/site.js" asp-append-version="true"></script>
+    @* Sección opcional donde cada vista puede inyectar sus propios scripts al final del body *@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

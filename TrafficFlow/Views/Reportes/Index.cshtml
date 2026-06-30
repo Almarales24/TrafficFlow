@@ -1,6 +1,6 @@
-﻿@{
-    ViewData["Title"] = "Reportes PDF";
-    Layout = null;
+@{
+    ViewData["Title"] = "Reportes PDF"; @* Título de la pestaña *@
+    Layout = null; @* Esta vista define su propio HTML sin usar el layout compartido *@
 }
 
 <!DOCTYPE html>
@@ -137,10 +137,12 @@
                 estadísticas de tráfico y los últimos registros del historial.
             </p>
 
+            @* Enlace que descarga el PDF; al hacer clic muestra el indicador de progreso *@
             <a href="/Reportes/Descargar" class="btn-descargar" onclick="mostrarEstado()">
                 ⬇ Descargar Reporte PDF
             </a>
 
+            @* Indicador de progreso visible solo durante la generación del PDF *@
             <div class="estado-generacion" id="estadoGeneracion">
                 ⚙️ Generando reporte...
             </div>
@@ -163,6 +165,7 @@
 
     </div>
 
+    @* Controla la visualización del indicador de generación del reporte *@
     <script src="~/js/reportes.js"></script>
 
 </body>

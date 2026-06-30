@@ -1,8 +1,9 @@
-﻿@model List<TrafficFlow.Modelos.Incidente>
+@* Recibe la lista de incidentes activos como modelo *@
+@model List<TrafficFlow.Modelos.Incidente>
 
 @{
-    ViewData["Title"] = "Incidentes";
-    Layout = null;
+    ViewData["Title"] = "Incidentes"; @* Título de la pestaña *@
+    Layout = null; @* Esta vista define su propio HTML sin usar el layout compartido *@
 }
 
 <!DOCTYPE html>
@@ -21,23 +22,28 @@
 
     <div style="display:flex; flex:1; overflow:hidden;">
 
+        @* Panel izquierdo: lista los incidentes activos *@
         <!-- Lista de incidentes -->
         <div class="panel-lateral" style="width:100%; max-width:500px;">
             <h2>Incidentes reportados</h2>
             <div id="listaIncidentes">
+                @* Si no hay incidentes, muestra un mensaje informativo *@
                 @if (Model.Count == 0)
                 {
                     <p style="color:#555;">No hay incidentes activos.</p>
                 }
+                @* Genera una tarjeta por cada incidente activo *@
                 @foreach (var incidente in Model)
                 {
                     <div class="tarjeta-ruta" id="incidente-@incidente.Id">
                         <h3>@incidente.Tipo.ToUpper()</h3>
                         <p>@incidente.Descripcion</p>
                         <p style="color:#8b949e;">📍 @incidente.Ubicacion</p>
+                        @* Fecha de creación en hora local *@
                         <p style="font-size:0.75rem; color:#555;">
                             @incidente.CreadoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                         </p>
+                        @* Botón que llama a la función JS para desactivar el incidente *@
                         <button onclick="desactivar('@incidente.Id')"
                                 style="margin-top:8px; background:var(--color-rojo); color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">
                             Desactivar
@@ -47,6 +53,7 @@
             </div>
         </div>
 
+        @* Panel derecho: formulario para reportar un nuevo incidente *@
         <!-- Formulario nuevo incidente -->
         <div class="panel-lateral" style="width:100%; max-width:400px;">
             <h2>Reportar incidente</h2>
@@ -70,7 +77,9 @@
 
     </div>
 
+    @* Librería SignalR para recibir incidentes en tiempo real *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    @* Gestiona la conexión y la visualización de notificaciones de incidentes *@
     <script src="~/js/notificaciones.js"></script>
 
 </body>

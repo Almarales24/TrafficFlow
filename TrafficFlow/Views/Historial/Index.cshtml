@@ -1,8 +1,9 @@
-﻿@model List<TrafficFlow.Modelos.RegistroTransito>
+@* Recibe la lista de registros históricos de tránsito *@
+@model List<TrafficFlow.Modelos.RegistroTransito>
 
 @{
-    ViewData["Title"] = "Historial de Tránsito";
-    Layout = null;
+    ViewData["Title"] = "Historial de Tránsito"; @* Título de la pestaña *@
+    Layout = null; @* Esta vista gestiona su propio HTML completo *@
 }
 
 <!DOCTYPE html>
@@ -138,20 +139,24 @@
 
     <div class="contenedor-historial">
 
+        @* Tarjetas de resumen con totales calculados desde el modelo *@
         <!-- Resumen -->
         <div class="resumen">
             <div class="tarjeta-resumen">
                 <h3>@Model.Count</h3>
                 <p>Total registros</p>
             </div>
+            @* Registros con nivel de tráfico alto *@
             <div class="tarjeta-resumen">
                 <h3 style="color:var(--color-rojo);">@Model.Count(r => r.NivelTransito == "alto")</h3>
                 <p>Trancones altos</p>
             </div>
+            @* Registros ocurridos en hora pico *@
             <div class="tarjeta-resumen">
                 <h3 style="color:var(--color-amarillo);">@Model.Count(r => r.HoraPico)</h3>
                 <p>En hora pico</p>
             </div>
+            @* Promedio de velocidad de todos los registros; muestra 0 si la lista está vacía *@
             <div class="tarjeta-resumen">
                 <h3 style="color:var(--color-verde);">
                     @(Model.Count > 0 ? Math.Round(Model.Average(r => r.VelocidadPromedio), 1) : 0) km/h
@@ -160,18 +165,22 @@
             </div>
         </div>
 
+        @* Filtros de búsqueda por fecha y ruta *@
         <!-- Filtros -->
         <div class="filtros">
             <div>
                 <label style="font-size:0.8rem; color:#8b949e;">Desde</label>
+                @* Campo de fecha inicial del rango de búsqueda *@
                 <input type="date" id="fechaDesde" />
             </div>
             <div>
                 <label style="font-size:0.8rem; color:#8b949e;">Hasta</label>
+                @* Campo de fecha final del rango de búsqueda *@
                 <input type="date" id="fechaHasta" />
             </div>
             <div>
                 <label style="font-size:0.8rem; color:#8b949e;">Ruta</label>
+                @* Selector de ruta; genera una opción por cada nombre único en el historial *@
                 <select id="filtroRuta">
                     <option value="">Todas las rutas</option>
                     @foreach (var ruta in Model.Select(r => r.NombreRuta).Distinct())
@@ -180,7 +189,9 @@
                     }
                 </select>
             </div>
+            @* Aplica los filtros seleccionados *@
             <button class="btn-filtrar" onclick="filtrar()">🔍 Filtrar</button>
+            @* Guarda el estado actual del tráfico como un nuevo registro en el historial *@
             <button class="btn-guardar" onclick="guardarEstado()">💾 Guardar estado actual</button>
         </div>
 
@@ -222,6 +233,7 @@
 
     </div>
 
+    @* Script que gestiona el filtrado y el guardado de historial *@
     <script src="~/js/historialTransito.js"></script>
 
 </body>

@@ -1,8 +1,10 @@
-﻿@model TrafficFlow.Modelos.DatoMeteorologico
+@* Recibe el dato meteorológico actual como modelo *@
+@model TrafficFlow.Modelos.DatoMeteorologico
 
 @{
-    ViewData["Title"] = "Meteorología";
-    Layout = null;
+    ViewData["Title"] = "Meteorología"; @* Título de la pestaña *@
+    Layout = null; @* Esta vista define su propio HTML completo *@
+    @* Obtiene el historial meteorológico desde ViewBag; usa lista vacía si no existe *@
     var historial = ViewBag.Historial as List<TrafficFlow.Modelos.DatoMeteorologico> ?? new();
 }
 
@@ -183,11 +185,13 @@
 
     <div class="contenedor-meteo">
 
+        @* Panel izquierdo: muestra el clima actual de Bogotá *@
         <!-- Panel clima actual -->
         <div class="panel-clima">
             <h2 style="color:var(--color-azul); margin:0;">Clima actual — Bogotá</h2>
 
             <div class="tarjeta-clima" id="tarjetaClima">
+                @* Selecciona el emoji del clima según la condición recibida del servidor *@
                 <div class="icono-clima" id="iconoClima">
                     @(Model.Condicion switch
                     {
@@ -219,6 +223,7 @@
 
             <div style="background:var(--color-fondo); border:1px solid var(--color-borde); border-radius:8px; padding:16px;">
                 <h3 style="margin:0 0 8px; font-size:0.9rem;">¿Cómo afecta al tráfico?</h3>
+            @* Muestra el texto de impacto según el nivel de condición climática *@
                 <p style="font-size:0.8rem; color:#8b949e; line-height:1.6;">
                     @(Model.ImpactoTransito switch
                     {
@@ -238,6 +243,7 @@
             </p>
         </div>
 
+        @* Panel derecho: tabla con el historial de datos climáticos *@
         <!-- Historial -->
         <div class="panel-historial">
             <h2 style="margin-bottom:20px;">Historial meteorológico</h2>
@@ -271,7 +277,9 @@
 
     </div>
 
+    @* Librería SignalR para recibir actualizaciones del clima en tiempo real *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    @* Gestiona la actualización de la tarjeta de clima y la conexión al hub *@
     <script src="~/js/meteorologia.js"></script>
 
 </body>

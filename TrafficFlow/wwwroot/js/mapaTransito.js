@@ -1,19 +1,22 @@
-﻿const conexion = new signalR.HubConnectionBuilder()
+// Crea la conexión con el hub de SignalR apuntando al endpoint del concentrador de tránsito
+const conexion = new signalR.HubConnectionBuilder()
     .withUrl("/concentradorTransito")
-    .withAutomaticReconnect()
+    .withAutomaticReconnect() // Reconecta automáticamente si se pierde la conexión
     .build();
 
-let mapa;
-let capasRutas = {};
+let mapa; // Instancia del mapa Leaflet
+let capasRutas = {}; // Diccionario que almacena las líneas dibujadas por ID de ruta
 
+// Colores asociados a cada nivel de tránsito para pintar las rutas en el mapa
 const coloresTransito = {
     bajo: "#39d353",
     medio: "#f0c030",
     alto: "#f85149"
 };
 
+// Inicializa el mapa Leaflet centrado en Bogotá y agrega las capas de TomTom
 function inicializarMapa() {
-    mapa = L.map("mapa").setView([4.7110, -74.0721], 13);
+    mapa = L.map("mapa").setView([4.7110, -74.0721], 13); // Centra el mapa en Bogotá con zoom 13
 
     // Capa base TomTom
     L.tileLayer(
@@ -35,23 +38,25 @@ function inicializarMapa() {
 }
 
 
+// Borra las rutas actuales del mapa y las redibuja con los datos nuevos recibidos
 function dibujarRutas(rutas) {
-    Object.values(capasRutas).forEach(capa => mapa.removeLayer(capa));
+    Object.values(capasRutas).forEach(capa => mapa.removeLayer(capa)); // Elimina las capas anteriores
     capasRutas = {};
 
     const panelRutas = document.getElementById("listaRutas");
-    panelRutas.innerHTML = "";
+    panelRutas.innerHTML = ""; // Limpia el panel lateral de rutas
 
     rutas.forEach(ruta => {
-        if (!ruta.segmentos || ruta.segmentos.length === 0) return;
+        if (!ruta.segmentos || ruta.segmentos.length === 0) return; // Omite rutas sin segmentos
 
         ruta.segmentos.forEach(segmento => {
-            const color = coloresTransito[segmento.nivelTransito] || coloresTransito.bajo;
+            const color = coloresTransito[segmento.nivelTransito] || coloresTransito.bajo; // Color según nivel de tráfico
             const linea = L.polyline(
-                generarCoordenadasSimuladas(ruta.nombre),
+                generarCoordenadasSimuladas(ruta.nombre), // Coordenadas predefinidas por nombre de ruta
                 { color: color, weight: 5, opacity: 0.8 }
             ).addTo(mapa);
 
+            // Ventana emergente con los detalles del segmento al hacer clic
             linea.bindPopup(`
                 <b>${ruta.nombre}</b><br>
                 ${segmento.desde} → ${segmento.hasta}<br>
@@ -59,10 +64,10 @@ function dibujarRutas(rutas) {
                 Velocidad: ${segmento.velocidadKmh} km/h
             `);
 
-            capasRutas[ruta.id] = linea;
+            capasRutas[ruta.id] = linea; // Registra la línea en el diccionario por ID de ruta
         });
 
-        const nivelGeneral = ruta.segmentos[0]?.nivelTransito || "bajo";
+        const nivelGeneral = ruta.segmentos[0]?.nivelTransito || "bajo"; // Nivel del primer segmento como representativo
         const tarjeta = document.createElement("div");
         tarjeta.className = "tarjeta-ruta";
         tarjeta.innerHTML = `
@@ -76,6 +81,7 @@ function dibujarRutas(rutas) {
             </p>
         `;
 
+        // Al hacer clic en la tarjeta, centra el mapa en esa ruta y abre su popup
         tarjeta.addEventListener("click", () => {
             if (capasRutas[ruta.id]) {
                 mapa.fitBounds(capasRutas[ruta.id].getBounds());
@@ -83,10 +89,11 @@ function dibujarRutas(rutas) {
             }
         });
 
-        panelRutas.appendChild(tarjeta);
+        panelRutas.appendChild(tarjeta); // Agrega la tarjeta al panel lateral
     });
 }
 
+// Devuelve las coordenadas predefinidas para cada ruta conocida; usa un par por defecto si no se encuentra
 function generarCoordenadasSimuladas(nombreRuta) {
     const coordenadas = {
         "Ruta Centro - Norte": [
@@ -102,20 +109,22 @@ function generarCoordenadasSimuladas(nombreRuta) {
             [4.5900, -74.0800], [4.6100, -74.0750], [4.6300, -74.0700]
         ]
     };
-    return coordenadas[nombreRuta] || [[4.6097, -74.0817], [4.6500, -74.0600]];
+    return coordenadas[nombreRuta] || [[4.6097, -74.0817], [4.6500, -74.0600]]; // Coordenadas de respaldo
 }
 
+// Alterna entre modo día y modo nocturno en el mapa y el tema visual
 function toggleModoNocturno() {
     const body = document.body;
     const btn = document.getElementById("btnModoNocturno");
-    const esDia = body.classList.toggle("modo-dia");
+    const esDia = body.classList.toggle("modo-dia"); // Activa o desactiva la clase de modo día
 
+    // Elimina todas las capas de teselas del mapa para reemplazarlas
     mapa.eachLayer(layer => {
         if (layer._url) mapa.removeLayer(layer);
     });
 
     if (esDia) {
-        btn.textContent = "🌙 Modo oscuro";
+        btn.textContent = "🌙 Modo oscuro"; // Cambia el texto del botón al modo opuesto
         L.tileLayer(
             `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=pXvYWN3CLrPH2zJSVRSsogEsUpzTICVA`,
             { attribution: "© TomTom", maxZoom: 19 }
@@ -135,23 +144,26 @@ function toggleModoNocturno() {
     ).addTo(mapa);
 }
 
+// Cuando el servidor envía rutas actualizadas, las redibuja en el mapa
 conexion.on("RecibirRutas", (rutas) => {
     dibujarRutas(rutas);
 });
 
+// Inicia la conexión con SignalR, solicita rutas inmediatamente y repite cada 30 segundos
 async function iniciar() {
     try {
-        await conexion.start();
-        await conexion.invoke("ObtenerRutasActualizadas");
+        await conexion.start(); // Establece la conexión
+        await conexion.invoke("ObtenerRutasActualizadas"); // Solicita las rutas al servidor
         setInterval(async () => {
-            await conexion.invoke("ObtenerRutasActualizadas");
+            await conexion.invoke("ObtenerRutasActualizadas"); // Refresca las rutas cada 30 s
         }, 30000);
     } catch (error) {
         console.error("Error de conexión:", error);
-        setTimeout(iniciar, 5000);
+        setTimeout(iniciar, 5000); // Reintenta la conexión tras 5 segundos
     }
 }
 
+// Ejecuta la inicialización del mapa y la conexión cuando el DOM está listo
 document.addEventListener("DOMContentLoaded", () => {
     inicializarMapa();
     iniciar();

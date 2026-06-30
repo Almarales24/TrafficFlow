@@ -1,31 +1,38 @@
+/* Tamaño base de fuente para pantallas pequeñas */
 html {
   font-size: 14px;
 }
 
+/* Aumenta el tamaño de fuente en pantallas de 768px o más */
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
 
+/* Aplica un contorno azul al enfocar botones, enlaces y campos de formulario */
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+/* Permite que el html ocupe al menos toda la altura de la pantalla */
 html {
   position: relative;
   min-height: 100%;
 }
 
+/* Deja espacio inferior en el body para que el footer no tape el contenido */
 body {
   margin-bottom: 60px;
 }
 
+/* Alinea el placeholder a la derecha en campos flotantes sin foco */
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
   color: var(--bs-secondary-color);
   text-align: end;
 }
 
+/* Alinea el placeholder a la izquierda cuando el campo flotante tiene foco */
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }

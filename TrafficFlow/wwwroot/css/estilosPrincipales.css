@@ -1,20 +1,23 @@
-﻿:root {
-    --color-fondo: #0d1117;
-    --color-panel: #161b22;
-    --color-borde: #30363d;
-    --color-texto: #c9d1d9;
-    --color-azul: #58a6ff;
-    --color-verde: #39d353;
-    --color-amarillo: #f0c030;
-    --color-rojo: #f85149;
+﻿/* Variables globales de color para el tema oscuro predeterminado */
+:root {
+    --color-fondo: #0d1117;      /* Fondo principal de la app */
+    --color-panel: #161b22;      /* Fondo de paneles y encabezado */
+    --color-borde: #30363d;      /* Color de bordes y separadores */
+    --color-texto: #c9d1d9;      /* Color del texto general */
+    --color-azul: #58a6ff;       /* Color de acento principal */
+    --color-verde: #39d353;      /* Indicador de tráfico fluido */
+    --color-amarillo: #f0c030;   /* Indicador de tráfico moderado */
+    --color-rojo: #f85149;       /* Indicador de tráfico congestionado */
 }
 
+/* Elimina márgenes y paddings por defecto en todos los elementos */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Configura el body para ocupar toda la pantalla en columna vertical */
 body {
     background-color: var(--color-fondo);
     color: var(--color-texto);
@@ -25,6 +28,7 @@ body {
 }
 
 /* Encabezado */
+/* Barra superior con fondo de panel y separador inferior */
 .encabezado {
     background-color: var(--color-panel);
     border-bottom: 1px solid var(--color-borde);
@@ -34,12 +38,14 @@ body {
     justify-content: space-between;
 }
 
+    /* Título principal en azul con espaciado entre letras */
     .encabezado h1 {
         color: var(--color-azul);
         font-size: 1.4rem;
         letter-spacing: 1px;
     }
 
+/* Contenedor del indicador de conexión en tiempo real */
 .indicador-conexion {
     display: flex;
     align-items: center;
@@ -47,6 +53,7 @@ body {
     font-size: 0.85rem;
 }
 
+    /* Punto verde animado que indica conexión activa */
     .indicador-conexion span {
         width: 10px;
         height: 10px;
@@ -55,31 +62,31 @@ body {
         animation: parpadeo 1.5s infinite;
     }
 
+/* Animación de parpadeo para el indicador de conexión */
 @keyframes parpadeo {
     0%, 100% {
         opacity: 1;
     }
-
     50% {
         opacity: 0.3;
     }
 }
 
-/* Contenedor principal */
+/* Contenedor principal que distribuye el mapa y el panel lateral */
 .contenedor-principal {
     display: flex;
     flex: 1;
     overflow: hidden;
 }
 
-/* Mapa */
+/* El mapa ocupa todo el espacio disponible restante */
 #mapa {
     flex: 1;
     height: 100%;
     min-height: calc(100vh - 50px);
 }
 
-/* Panel lateral */
+/* Panel lateral fijo a la derecha con scroll vertical */
 .panel-lateral {
     width: 320px;
     background-color: var(--color-panel);
@@ -91,13 +98,14 @@ body {
     gap: 12px;
 }
 
+    /* Título del panel lateral en azul */
     .panel-lateral h2 {
         color: var(--color-azul);
         font-size: 1rem;
         margin-bottom: 8px;
     }
 
-/* Tarjeta de ruta */
+/* Tarjeta individual de cada ruta activa */
 .tarjeta-ruta {
     background-color: var(--color-fondo);
     border: 1px solid var(--color-borde);
@@ -107,34 +115,29 @@ body {
     transition: border-color 0.2s;
 }
 
+    /* Resalta el borde al pasar el cursor sobre la tarjeta */
     .tarjeta-ruta:hover {
         border-color: var(--color-azul);
     }
 
+    /* Nombre de la ruta dentro de la tarjeta */
     .tarjeta-ruta h3 {
         font-size: 0.95rem;
         margin-bottom: 6px;
     }
 
+    /* Texto secundario dentro de la tarjeta */
     .tarjeta-ruta p {
         font-size: 0.8rem;
         color: #8b949e;
     }
 
-/* Niveles de tránsito */
-.nivel-bajo {
-    color: var(--color-verde);
-}
+/* Colores según el nivel de tránsito */
+.nivel-bajo  { color: var(--color-verde); }    /* Tráfico fluido */
+.nivel-medio { color: var(--color-amarillo); } /* Tráfico moderado */
+.nivel-alto  { color: var(--color-rojo); }     /* Tráfico congestionado */
 
-.nivel-medio {
-    color: var(--color-amarillo);
-}
-
-.nivel-alto {
-    color: var(--color-rojo);
-}
-
-/* Leyenda */
+/* Leyenda de niveles de tránsito al pie del panel */
 .leyenda {
     display: flex;
     flex-direction: column;
@@ -144,19 +147,21 @@ body {
     padding-top: 12px;
 }
 
+/* Fila individual de la leyenda con ícono y texto */
 .leyenda-item {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
+/* Línea de color que representa el nivel en la leyenda */
 .leyenda-color {
     width: 16px;
     height: 4px;
     border-radius: 2px;
 }
 
-/* Modo día */
+/* Modo día: sobreescribe las variables de color al tema claro */
 body.modo-dia {
     --color-fondo: #f0f2f5;
     --color-panel: #ffffff;
@@ -170,21 +175,25 @@ body.modo-dia {
     color: var(--color-texto);
 }
 
+    /* Encabezado en modo día con fondo blanco */
     body.modo-dia .encabezado {
         background-color: #ffffff;
         border-bottom: 1px solid #d0d7de;
     }
 
+    /* Panel lateral en modo día con fondo blanco */
     body.modo-dia .panel-lateral {
         background-color: #ffffff;
         border-left: 1px solid #d0d7de;
     }
 
+    /* Tarjeta de ruta en modo día con fondo gris claro */
     body.modo-dia .tarjeta-ruta {
         background-color: #f6f8fa;
         border: 1px solid #d0d7de;
     }
 
+        /* Resalta el borde de la tarjeta en modo día al hacer hover */
         body.modo-dia .tarjeta-ruta:hover {
             border-color: #0969da;
         }

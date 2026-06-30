@@ -1,8 +1,10 @@
-﻿@model List<TrafficFlow.Modelos.RutaFavorita>
+@* Recibe la lista de rutas favoritas guardadas por el usuario *@
+@model List<TrafficFlow.Modelos.RutaFavorita>
 
 @{
-    ViewData["Title"] = "Rutas Favoritas";
-    Layout = null;
+    ViewData["Title"] = "Rutas Favoritas"; @* Título de la pestaña *@
+    Layout = null; @* Desactiva el layout global; esta vista define su propio HTML *@
+    @* Obtiene la lista de rutas disponibles desde ViewBag; si es nula, usa una lista vacía *@
     var rutas = ViewBag.Rutas as List<TrafficFlow.Modelos.Ruta> ?? new();
 }
 
@@ -149,6 +151,7 @@
 
     <div class="contenedor-favoritos">
 
+        @* Panel izquierdo: formulario para agregar una nueva ruta favorita *@
         <!-- Panel agregar -->
         <div class="panel-agregar">
             <h2 style="color:var(--color-azul); margin:0;">Agregar favorita</h2>
@@ -157,11 +160,13 @@
                 <div class="campo">
                     <label>Ruta</label>
                     <select name="RutaId" id="selectRuta" onchange="actualizarNombre()">
+                        @* Genera una opción por cada ruta disponible, con su ID y nombre *@
                         @foreach (var ruta in rutas)
                         {
                             <option value="@ruta.Id" data-nombre="@ruta.Nombre">@ruta.Nombre</option>
                         }
                     </select>
+                    @* Campo oculto que almacena el nombre de la ruta seleccionada para enviarlo al servidor *@
                     <input type="hidden" name="NombreRuta" id="nombreRuta" value="@rutas.FirstOrDefault()?.Nombre" />
                 </div>
 
@@ -192,15 +197,18 @@
             </button>
         </div>
 
+        @* Panel derecho: muestra la lista de favoritos guardados *@
         <!-- Lista favoritos -->
         <div class="panel-lista">
             <h2 style="margin-bottom:20px;">Mis rutas favoritas</h2>
 
             <div id="listaFavoritos">
+                @* Si no hay favoritos, muestra mensaje orientativo *@
                 @if (Model.Count == 0)
                 {
                     <p style="color:#555;">No tienes rutas favoritas aún.</p>
                 }
+                @* Itera los favoritos y crea una tarjeta por cada uno *@
                 @foreach (var favorito in Model)
                 {
                     <div class="tarjeta-favorito" id="favorito-@favorito.Id">
@@ -209,11 +217,13 @@
                             <div class="info-favorito">
                                 <h3>@favorito.NombreRuta</h3>
                                 <p>Alerta cuando: <span class="nivel-@favorito.NivelAlerta">● @favorito.NivelAlerta</span></p>
+                                @* Fecha en que se guardó este favorito, en hora local *@
                                 <p style="font-size:0.75rem; margin-top:2px;">
                                     Agregado: @favorito.CreadoEn.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
                                 </p>
                             </div>
                         </div>
+                        @* Botón que elimina el favorito mediante llamada JS *@
                         <button class="btn-eliminar" onclick="eliminar('@favorito.Id')">
                             🗑 Eliminar
                         </button>
@@ -224,7 +234,9 @@
 
     </div>
 
+    @* Librería SignalR para recibir alertas en tiempo real *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.0/signalr.min.js"></script>
+    @* Lógica de favoritos: alertas, eliminación y conexión al hub *@
     <script src="~/js/rutasFavoritas.js"></script>
 
 </body>

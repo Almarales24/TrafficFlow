@@ -1,11 +1,16 @@
-﻿@model ErrorViewModel
+@* Asocia esta vista con el modelo ErrorViewModel para acceder a sus propiedades *@
+@model ErrorViewModel
 @{
+    @* Asigna el título de la página que se mostrará en el navegador *@
     ViewData["Title"] = "Error";
 }
 
+@* Encabezado principal que indica que ocurrió un error *@
 <h1 class="text-danger">Error.</h1>
+@* Mensaje secundario descriptivo del error *@
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
+@* Muestra el identificador de la solicitud solo si está disponible, útil para depuración *@
 @if (Model.ShowRequestId)
 {
     <p>
@@ -13,7 +18,9 @@
     </p>
 }
 
+@* Título de la sección de ayuda para entornos de desarrollo *@
 <h3>Development Mode</h3>
+@* Explica cómo activar el entorno de desarrollo para obtener más detalles del error *@
 <p>
     Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
 </p>
